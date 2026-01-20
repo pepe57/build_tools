@@ -443,14 +443,14 @@ def cmd_in_dir_qemu(platform, directory, prog, args=[], is_no_errors=False):
       "default_libs": "/usr/arm-linux-gnueabi"
     }
   }
-  
+
   if platform not in platform_config:
     return 0
 
   libs_path = platform_config[platform]["default_libs"]
   if config.option("sysroot") != "":
     libs_path = config.option("sysroot_" + platform)
-  
+
   return cmd_in_dir(directory, platform_config[platform]["qemu"], ["-L", libs_path, prog] + args, is_no_errors)
 
 def create_qemu_wrapper(binary_path, platform):
@@ -458,19 +458,19 @@ def create_qemu_wrapper(binary_path, platform):
   binary_name = os.path.basename(binary_path)
   binary_bin = binary_path + '.bin'
   sysroot = config.option("sysroot_" + platform)
-  
+
   if os.path.exists(binary_path):
     os.rename(binary_path, binary_bin)
-  
+
   wrapper_content = f'''#!/bin/bash
 DIR="$(cd "$(dirname "${{BASH_SOURCE[0]}}")" && pwd)"
 export QEMU_LD_PREFIX={sysroot}
 exec qemu-aarch64 -L {sysroot} "$DIR/{binary_name}.bin" "$@"
 '''
-  
+
   with open(binary_path, 'w') as f:
     f.write(wrapper_content)
-  
+
   os.chmod(binary_path, 0o755)
   return binary_bin
 
@@ -962,7 +962,7 @@ def qt_copy_icu(out, platform):
     postfixes += ["/aarch64-linux-gnu"]
   elif ("linux_32" == platform):
     postfixes += ["/i386-linux-gnu"]
-    
+
   for postfix in postfixes:
     tests += [prefix + "/lib" + postfix]
     tests += [prefix + "/lib64" + postfix]
@@ -1633,6 +1633,12 @@ def hack_xcode_ios():
     file.write(filedata)
   return
 
+def find_ios_sdk(sdk_name):
+  return run_command("xcrun --sdk " + sdk_name + " --show-sdk-path")['stdout']
+
+def find_xcode_toolchain(sdk_name):
+  return run_command("xcrun --sdk " + sdk_name + " --show-toolchain-path")['stdout']
+
 def find_mac_sdk_version():
   sdk_dir = run_command("xcode-select -print-path")['stdout']
   sdk_dir = os.path.join(sdk_dir, "Platforms/MacOSX.platform/Developer/SDKs")
@@ -1945,7 +1951,7 @@ def set_sysroot_env(platform):
   path = config.option("sysroot_" + platform)
   sysroot_path_bin = config.get_custom_sysroot_bin(platform)
   compiler_gcc_prefix = get_compiler_gcc_prefix(platform)
-  
+
   os.environ['PATH'] = sysroot_path_bin + ":" + get_env("PATH")
   os.environ['LD_LIBRARY_PATH'] = config.get_custom_sysroot_lib(platform)
 
@@ -1953,7 +1959,7 @@ def set_sysroot_env(platform):
   os.environ['CXX'] = compiler_gcc_prefix + "g++"
   os.environ['AR'] = compiler_gcc_prefix + "ar"
   os.environ['RANLIB'] = compiler_gcc_prefix + "ranlib"
-  
+
   os.environ['CFLAGS'] = "--sysroot=" + path
   os.environ['CXXFLAGS'] = "--sysroot=" + path
   os.environ['LDFLAGS'] = "--sysroot=" + path
@@ -1975,7 +1981,7 @@ def check_python():
     download('https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/python/python3.tar.gz', directory + "/python3.tar.gz")
     download('https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/python/extract.sh', directory + "/extract.sh")
     cmd_in_dir(directory, "chmod", ["+x", "./extract.sh"])
-    cmd_in_dir(directory, "./extract.sh")    
+    cmd_in_dir(directory, "./extract.sh")
   directory_bin = directory_bin.replace(" ", "\\ ")
   os.environ["PATH"] = directory_bin + os.pathsep + os.environ["PATH"]
   return
