@@ -256,7 +256,10 @@ def delete_dir(path):
     shutil.rmtree(get_path(path), ignore_errors=True)
   return
 
-def copy_lib(src, dst, name):
+def copy_lib(src_folder, dst, name, subdir=""):
+  src = src_folder
+  if subdir != "":
+    src += ("/" + subdir)
   if (config.check_option("config", "bundle_dylibs")) and is_dir(src + "/" + name + ".framework"):
     copy_dir(src + "/" + name + ".framework", dst + "/" + name + ".framework", symlinks=True)
 
@@ -1393,6 +1396,7 @@ def mac_correct_rpath_x2t(dir):
   mac_correct_rpath_library("IWorkFile", ["UnicodeConverter", "kernel"])
   mac_correct_rpath_library("HWPFile", ["UnicodeConverter", "kernel", "graphics", "StarMathConverter"])
   mac_correct_rpath_library("StarMathConverter", ["kernel"])
+  mac_correct_rpath_library("ooxmlsignature", ["kernel"])
 
   def correct_core_executable(name, libs):
     cmd("chmod", ["-v", "+x", name])
@@ -1400,7 +1404,7 @@ def mac_correct_rpath_x2t(dir):
     mac_correct_rpath_binary(name, mac_icu_libs + libs)
     return
 
-  correct_core_executable("x2t", ["UnicodeConverter", "kernel", "kernel_network", "graphics", "PdfFile", "XpsFile", "OFDFile", "DjVuFile", "HtmlFile2", "Fb2File", "EpubFile", "doctrenderer", "DocxRenderer", "IWorkFile", "HWPFile", "StarMathConverter"])
+  correct_core_executable("x2t", ["UnicodeConverter", "kernel", "kernel_network", "graphics", "PdfFile", "XpsFile", "OFDFile", "DjVuFile", "HtmlFile2", "Fb2File", "EpubFile", "doctrenderer", "DocxRenderer", "IWorkFile", "HWPFile", "StarMathConverter", "ooxmlsignature"])
   if is_file("./allfontsgen"):
     correct_core_executable("allfontsgen", ["UnicodeConverter", "kernel", "graphics"])
   if is_file("./allthemesgen"):
