@@ -66,8 +66,6 @@ def make_windows():
     if branding.onlyoffice:
       make_inno()
       make_inno("standalone")
-      if arch != "arm64":
-        make_inno("update")
       make_advinst()
 
       make_prepare("commercial")
