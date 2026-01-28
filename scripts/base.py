@@ -659,6 +659,7 @@ def get_repositories():
     result.update(get_server_addons())
     result["document-server-integration"] = [False, False]
     result["document-templates"] = [False, False]
+    result["document-formats"] = [False, False]
 
   get_branding_repositories(result)
   return result

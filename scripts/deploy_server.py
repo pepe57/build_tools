@@ -181,6 +181,12 @@ def make():
     base.copy_dir(document_templates_files + '/new', document_templates + '/new')
     base.copy_dir(document_templates_files + '/sample', document_templates + '/sample')
 
+    #document-formats
+    document_formats_files = server_dir + '/../document-formats'
+    document_formats = build_server_dir + '/../document-formats'
+    base.create_dir(document_formats)
+    base.copy_file(document_formats_files + '/onlyoffice-docs-formats.json', document_formats + '/onlyoffice-docs-formats.json')
+
     #license
     license_file1 = server_dir + '/LICENSE.txt'
     license_file2 = server_dir + '/3rd-Party.txt'
