@@ -122,7 +122,13 @@ def make(platform, project, qmake_config_addon="", is_no_errors=False):
     if ("1" == config.option("clean")):
       base.cmd_and_return_cwd("make", clean_params, True)
       base.cmd_and_return_cwd("make", distclean_params, True)
-      base.cmd(qmake_app, build_params)
+      
+      if "" != config.option("sysroot"):
+        base.restore_sysroot_env()
+      base.cmd(qmake_app, build_params)   
+      if "" != config.option("sysroot"):
+        base.set_sysroot_env(platform)
+      
       base.correct_makefile_after_qmake(platform, makefile)
     base.cmd_and_return_cwd("make", ["-f", makefile] + get_j_num(), is_no_errors)
 
