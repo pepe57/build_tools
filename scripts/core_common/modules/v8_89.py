@@ -65,8 +65,8 @@ def is_ubuntu_24_or_higher():
   return False
 
 def fix_ubuntu24():
-  if not is_ubuntu_24_or_higher():
-    return
+  #if not is_ubuntu_24_or_higher():
+  #  return
 
   if "" == config.option("sysroot"):
     return
