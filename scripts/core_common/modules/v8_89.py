@@ -286,15 +286,10 @@ def make():
       old_env = dict(os.environ)
       base.set_sysroot_env("linux_64")
 
-      pkg_old = ""
-      if is_ubuntu24:
-        pkg_old = os.environ.get("PKG_CONFIG_PATH", "")
-        os.environ["PKG_CONFIG_PATH"] = sysroot_path + "/usr/lib/x86_64-linux-gnu/pkgconfig:" + sysroot_path + "/usr/lib/pkgconfig:" + sysroot_path + "/usr/share/pkgconfig"
-
+      pkg_old = os.environ.get("PKG_CONFIG_PATH", "")
+      os.environ["PKG_CONFIG_PATH"] = sysroot_path + "/usr/lib/x86_64-linux-gnu/pkgconfig:" + sysroot_path + "/usr/lib/pkgconfig:" + sysroot_path + "/usr/share/pkgconfig"
       base.cmd2("gn", ["gen", "out.gn/linux_64", make_args(gn_args, "linux")], False)
-      
-      if is_ubuntu24:
-        os.environ["PKG_CONFIG_PATH"] = pkg_old
+      os.environ["PKG_CONFIG_PATH"] = pkg_old
 
       base.cmd2("ninja", ["-C", "out.gn/linux_64"], False)
       base.restore_sysroot_env()
@@ -310,16 +305,11 @@ def make():
   if config.check_option("platform", "linux_arm64"):
     base.cmd("build/linux/sysroot_scripts/install-sysroot.py", ["--arch=arm64"], False)
     
-    pkg_old = ""
-    if is_ubuntu24:
-      sysroot_path = config.option("sysroot_linux_64")
-      pkg_old = os.environ.get("PKG_CONFIG_PATH", "")
-      os.environ["PKG_CONFIG_PATH"] = sysroot_path + "/usr/lib/x86_64-linux-gnu/pkgconfig:" + sysroot_path + "/usr/lib/pkgconfig:" + sysroot_path + "/usr/share/pkgconfig"
-
+    sysroot_path = config.option("sysroot_linux_64")
+    pkg_old = os.environ.get("PKG_CONFIG_PATH", "")
+    os.environ["PKG_CONFIG_PATH"] = sysroot_path + "/usr/lib/x86_64-linux-gnu/pkgconfig:" + sysroot_path + "/usr/lib/pkgconfig:" + sysroot_path + "/usr/share/pkgconfig"
     base.cmd2("gn", ["gen", "out.gn/linux_arm64", make_args(gn_args, "linux_arm64", False)])
-
-    if is_ubuntu24:
-      os.environ["PKG_CONFIG_PATH"] = pkg_old
+    os.environ["PKG_CONFIG_PATH"] = pkg_old
 
     base.cmd("ninja", ["-C", "out.gn/linux_arm64"])
 
