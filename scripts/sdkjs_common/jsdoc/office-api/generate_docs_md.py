@@ -483,7 +483,7 @@ def process_doclets(data, output_dir, editor_name):
     if editor_name == 'word':
         example_editor_name += 'docx'
     elif editor_name == 'forms':
-        example_editor_name += 'pdf'
+        example_editor_name += 'forms'
     elif editor_name == 'slide':
         example_editor_name += 'pptx'
     elif editor_name == 'cell':
