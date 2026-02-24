@@ -13,14 +13,16 @@ configs = [
     "./config/word.json",
     "./config/cell.json",
     "./config/slide.json",
-    "./config/forms.json"
+    "./config/forms.json",
+    "./config/pdf.json"
 ]
 
 editors_maps = {
     "word":     "CDE",
     "cell":     "CSE",
     "slide":    "CPE",
-    "forms":    "CFE"
+    "forms":    "CFE",
+    "pdf":		"PDFE"
 }
 
 def generate(output_dir, md=False):
