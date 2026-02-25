@@ -79,10 +79,7 @@ def generate(output_dir, md=False):
                             doclet['example'] = remove_js_comments(comment) + "```js\n" + code_content + "\n```"
                         
                         if md == False:
-                            document_type = editor_name
-                            if "forms" == document_type:
-                                document_type = "pdf"
-                            doclet['description'] = doclet['description'] + f'\n\n## Try it\n\n ```js document-builder={{"documentType": "{document_type}"}}\n{code_content}\n```'
+                            doclet['description'] = doclet['description'] + f'\n\n## Try it\n\n ```js document-builder={{"documentType": "{editor_name}"}}\n{code_content}\n```'
         
         # Write the modified JSON file back
         with open(output_file, 'w', encoding='utf-8') as f:
